@@ -7,7 +7,7 @@ public class FiBo_Matrix {
 	public static void main(String[] args) {
 		
 		FiBo_Matrix fiBo = new FiBo_Matrix();
-		int n = 7;
+		int n = 80;
 		
 		// Matrix A zum späteren potenzieren
 		// A = 	( 1 1 )
@@ -18,8 +18,8 @@ public class FiBo_Matrix {
 		// Matrix B gibt das Ergebnis direkt aus
 		// B=	( fib(n)  )
 		//		( fib(n-1 )
-		long[][] matrixB = {{fiBo.fib(n)},{fiBo.fib(n - 1)}};
-		System.out.println("matrixB: " + Arrays.deepToString(matrixB));
+		//long[][] matrixB = {{fiBo.fib(n)},{fiBo.fib(n - 1)}};
+		//System.out.println("matrixB: " + Arrays.deepToString(matrixB));
 		
 		// Matrix C als Zwischenspeicher für das Potenzieren
 		long[][] matrixC = {{0,0},{0,0}};
@@ -39,7 +39,7 @@ public class FiBo_Matrix {
 		System.out.println("");
 				
 		// n-2 Loops Potenzieren
-		for (int i = 1; i <= n - 2; i++) {
+		for (int i = 1; i < n - 2; i++) {
 		
 			
 		matrixC[0][0] = (matrixTemp[0][0]*matrixA[0][0]) + (matrixTemp[0][1]*matrixA[1][0]);
@@ -66,7 +66,7 @@ public class FiBo_Matrix {
 		matrixRes[0][0] = ((matrixC[0][0]*matrixD[0][0]) + (matrixC[0][1]*matrixD[1][0]));
 		matrixRes[1][0] = ((matrixC[1][0]*matrixD[0][0]) + (matrixC[1][1]*matrixD[1][0]));
 		System.out.println("matrixRes: " + Arrays.deepToString(matrixRes));
-		System.out.println("matrixB (Kontrolle): " + Arrays.deepToString(matrixB));
+		//System.out.println("matrixB (Kontrolle): " + Arrays.deepToString(matrixB));
 		
 
 		
