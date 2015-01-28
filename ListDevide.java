@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 public class ListDevide {
 	
-	public static  int[] listArray = {20, 6, 8, 3, 9, 12, 7};
-	public static int[] pivotArray = new int[listArray.length];
+	public static  int[] listArray;
+	public static int[] pivotArray;
 	public static int vA, vM, vE, vPivot, vTmp, median;
 	public int[] lTB;
 	public int[] rTB;
@@ -93,8 +93,50 @@ public class ListDevide {
 		return sortArray;
 	}
 	
+	public int[] importData() throws IOException {
+		File in = new File("src\\Uebung2\\Daten_Ü2_A1.txt");
+		FileReader fr = new FileReader(in);
+		FileReader fr2 = new FileReader(in);
+		BufferedReader br = new BufferedReader(fr);
+		BufferedReader br2 = new BufferedReader(fr2);
+		
+		System.out.println("Datei: " + in);
+		
+		// Round 1 - Count lines
+		String line = br.readLine();
+		int lineCount = 0;
+		
+		while (line != null) {
+			lineCount = lineCount + 1;
+			//System.out.println(line);
+			line = br.readLine();
+		}
+		
+		br.close();
+		fr.close();
+		System.out.println("LineCount: " + lineCount);
+		this.listArray = new int[lineCount];
+		
+		// Round 2 - Create Array and fill with data
+		
+		String newLine = br2.readLine();
+		int count = 0;
+		
+		while (newLine != null) {
+			this.listArray[count] = Integer.parseInt(newLine);
+			//System.out.println("Bla" + list[count]);
+			count = count + 1;
+			newLine = br2.readLine();
+		}
+		
+		//System.out.println("filled Array: " + Arrays.toString(listArray));
+		return this.listArray;
+	}
+	
 	public static void main(String[] args) throws IOException {
 		ListDevide listDevide = new ListDevide();
+		
+		listDevide.importData();
 		
 		System.out.println("listArray: " + Arrays.toString(listArray));
 		
@@ -117,30 +159,6 @@ public class ListDevide {
 		
 		// Arrays in lTB und rTB teilen
 		listDevide.sortieren(pivotArray);
-		
-		
-//		File in = new File("src\\Uebung2\\Daten_Ü2_A1.txt");
-//		FileReader fr = new FileReader(in);
-//		BufferedReader br = new BufferedReader(fr);
-//		
-//		String line = br.readLine();
-//		int lineCount = 0;
-//		
-//		while (line != null) {
-//			line = br.readLine();
-//			lineCount = lineCount + 1;
-//			System.out.println(line);
-//		}
-//		
-//		System.out.println(lineCount);
-//		String[] list = new String[lineCount];
-//		
-//		while (line != null) {
-//			list[0] = br.readLine();
-//			System.out.println(list[0]);
-//		}
-
-		
 		
 	}
 }
