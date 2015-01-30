@@ -72,16 +72,16 @@ public class Launcher {
 		// Ermittlung auf welcher Seite weiter gesucht werden soll
 		// links oder rechts von Pivotelement
 		
-		if (k < posPivot) {
+		if (k < posPivot-z1+1) {
 			// linker Teil vom Pivotelemente relevant [0 ... posPivot - 1]
 			System.out.println("k < posPivot (posPivot: " + posPivot + ")");
-			return quickSelect(array, z1, (posPivot - 1), k);
+			return quickSelect(array, z1, posPivot, k);
 		}
 		
-		if (k > posPivot) {
+		if (k > posPivot-z1+1) {
 			// rechter Teil vom Pivotelement relevant [posPivot + 1 ... posPivot - 1]
 			System.out.println("k > posPivot (posPivot: " + posPivot + ")");
-			return quickSelect(array, (posPivot+1), z2, (k - posPivot - 1));
+			return quickSelect(array, (posPivot+1), z2, k - posPivot);
 			
 		}
 		
@@ -99,7 +99,9 @@ public class Launcher {
 		System.out.println("");
 		System.out.println("Ergebnis | Position: " + output + " | Wert: " + array[output]);
 		System.out.println("Zielarray (teilsortiert): " + Arrays.toString(array));
-
+		Arrays.sort(array);
+		System.out.println(Arrays.toString(array));
+		System.out.println(array.length);
 		 
 	}
 	
