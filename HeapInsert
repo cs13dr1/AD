@@ -1,0 +1,76 @@
+package HeapInsert;
+
+import java.nio.channels.Pipe.SourceChannel;
+import java.util.Arrays;
+
+public class Launcher {
+	
+	//public static int[] sourceArray = {2, 4, 3, 6, 10, 8, 12, 15};
+	public static int[] sourceArray = {475,454,356,138,123,750,812,259,868,304,289,941};
+	public static int[] heapArray;
+	
+	public static void init() {
+		System.out.println("heapInit");
+		heapArray = new int[sourceArray.length];
+		System.out.println("sourceArray: " + Arrays.toString(sourceArray) + "\n");
+	}
+	
+	public static void heapInsert() {
+		
+		// Elemente aus sourceArray in das heapArray kopieren
+		
+		for (int i = 0; i < sourceArray.length; i++) {
+			heapArray[i] = sourceArray[i];
+			System.out.println("heapInsert für Element [" + i + "] mit Wert " + heapArray[i] + "\n");
+			//System.out.println(i + " | "  + heapArray[i]);
+			heapCompare(i);
+		}
+		
+	}
+	
+	public static void heapCompare(int index) {
+		//System.out.println("heapCompare");
+		// Kind-Element mit Vater-Element vergleichen und ggf. tauschen
+		//
+		// k = Position des aktuellen Elementes
+		// Kind-Element ermitteln: C = 2*k + 1 (links) | 2*k + 2 (rechts)
+		// Eltern-Element ermitteln: P = (k - 1) / 2
+		
+		int k = index;
+		while (k > 0) {
+			//System.out.println("While Loop. index = " + index);
+			// k = Index aktuelles Item | p = Index Eltern-Element des aktuellen Item
+			// item = Wert des aktuellen Item | parent = Wert des Eltern-Element
+			
+			int p = (k-1)/2;
+			int item = heapArray[k];
+			int parent = heapArray[p];
+			
+			// Vergleich
+			if (item > parent) {
+				// tausche Items
+				// Positionen der Elemente vertauschen, wenn C > P
+				System.out.println("Child " + heapArray[k] + " > Parent " + heapArray[p] + " | tausche k & p \n" );
+				int tmp = 0;
+				tmp = heapArray[k];
+				heapArray[k] = heapArray[p];
+				heapArray[p] = tmp;
+				k = p;
+			} else {
+				break;
+			}
+		}
+		
+	}
+	
+
+	public static void main(String[] args) {
+		init();
+		heapInsert();
+		System.out.println("sourceArray: " + Arrays.toString(sourceArray));
+		System.out.println("heapArray:   " + Arrays.toString(heapArray));
+
+
+	}
+
+}
