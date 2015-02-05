@@ -30,12 +30,35 @@ public class OptimalBinarySearchTree {
 		// w(i,j) = Summe w(i,i) + w(i,i+1) ... + w(i,j)
 
 		int i = 0;
-		int j = 0;
+		int j = 1;
+		int max = 5;
+		int c1 = 0; 
+		int c2 = 0;
 		
-		//
-		for (; i <= j; i++) {
+		// 0,1, 1,2, 2,3 3,4 4,5 (+1)
+		// 0,2, 1,3, 2,4 3,5 (+2)
+		// 0,3, 1,4, 2,5 (+3)
+		// 0,4, 1,5 (+4)
+		// 0,5 (+5)
+		
+		for (c1 = 0; c1 < max; c1++) {
+			i = 0;
+			c2 = c1 + 1;
+			int x = c2;
+			
+			while(c2 < max) {
+				System.out.println(c1);
+				System.out.println(c2);
+				System.out.println("[" + i + "]" + " [" + j + "]");
+				i = i + x;
+				j = j + x;
+				x++;
+			}
+			
 			
 		}
+		
+		
 	}
 
 }
