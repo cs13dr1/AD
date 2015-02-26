@@ -1,4 +1,9 @@
+package A8;
 import java.awt.DisplayMode;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +28,35 @@ public class Floyed_Warshall {
 	public static int var4 = 0;
 	public static int var5 = 0;
 	
+	public static void readFile() {
+		
+		String cells[] = null;
+		
+		try 
+		{
+			File in = new File("src\\A8\\Daten8A.txt");
+			FileReader fr = new FileReader(in);
+		    BufferedReader br = new BufferedReader(fr);
+			
+		    String line = null;
+		    
+		    while ((line = br.readLine()) != null) 
+		    {
+		         cells = line.split("\t");                          
+		        //System.out.println(cells.length);
+		        //System.out.println(line);
+		        
+		    }
+		    br.close();
+		    for (int i = 0; i < cells.length; i++) {
+		    	//System.out.print(cells[i] + "");
+		    }
+		} 
+		catch (IOException e) 
+		{
+		    e.printStackTrace();
+		}
+	}
 	
 	public static void calculateMaps() {
 		// Berechnung zum füllen von D1
@@ -37,38 +71,46 @@ public class Floyed_Warshall {
 		
 		for (int i = 1; i <= vertex; i++) {
 			for (int j = 1; j <= vertex; j++) {
-				//System.out.println(i + " " + j);
-				if (mapDTmp.get(i, j) == 0) {
-					//System.out.println(mapDTmp.get(i, j));
-					
-					// Felder auslesen
-					var1 = mapD.get(i, j);
-					var2 = ( mapD.get(i, iteration) + mapD.get(iteration, j) );
-					
-					// Wenn einer der beiden Werte (i,k) oder (k,j) oo ist, dann wird var2 auf oo gesetzt
-					if ( (mapD.get(i, iteration) == Integer.MAX_VALUE) || (mapD.get(iteration, j) == Integer.MAX_VALUE) ) {
-						var2 = Integer.MAX_VALUE;
-					}
-
-					if (var1 > var2) {
-						mapDTmp.set(i, j, var2);
-					} else {
-						mapDTmp.set(i, j, var1);
-					}
-					
-					// fülle S(i,j)
-					var3 = mapD.get(i, j);
-					var4 = mapDTmp.get(i, j);
-					var5 = mapS.get(i, j);
-					
-					if ( var3 == var4 ) {
-						mapSTmp.set(i, j, var5);
-					} else {
-						mapSTmp.set(i, j, iteration);
-					}
+				
+				if ( (i == iteration) || (j == iteration) ) {
+					// mache nichts, wenn i/j zur k. Iteration gehören
 				}
-								
-			}
+				else if (mapDTmp.get(i, j) == 0) {
+						
+						// Felder auslesen
+						var1 = mapD.get(i, j);
+						var2 = ( mapD.get(i, iteration) + mapD.get(iteration, j) );
+						
+						// Wenn einer der beiden Werte (i,k) oder (k,j) oo ist, dann wird var2 auf oo gesetzt
+						if ( (mapD.get(i, iteration) == Integer.MAX_VALUE) || (mapD.get(iteration, j) == Integer.MAX_VALUE) ) {
+							var2 = Integer.MAX_VALUE;
+						}
+	
+						if (var1 > var2) {
+							// YES
+							mapDTmp.set(i, j, var2);
+							mapDTmp.set(j, i, var2);
+						} else {
+							// NO
+							mapDTmp.set(i, j, var1);
+							mapDTmp.set(j, i, var1);
+						}
+						
+						// fülle S(i,j)
+						var3 = mapD.get(i, j);
+						var4 = mapDTmp.get(i, j);
+						var5 = mapS.get(i, j);
+						
+						if ( var3 == var4 ) {
+							mapSTmp.set(i, j, var5);
+							mapSTmp.set(j, i, var5);
+						} else {
+							mapSTmp.set(i, j, iteration);
+							mapSTmp.set(j, i, iteration);
+						}
+					}
+									
+				}
 		}
 		
 		// copy mapDTmp / mapSTmp -> mapD / mapS for next iteration
@@ -170,8 +212,9 @@ public class Floyed_Warshall {
 		// ToDo
 		// - remove all loops
 		// - remove all parallel edges between vertexes, keep the one with the lowest
+		// - calculateMap darf nicht k. Zeile/Speile durchlaufen
 		
-//		int[] source = {0, 1,2,2, 2,1,2, 1,3,4, 3,1,4, 1,4,Integer.MAX_VALUE, 4,1,Integer.MAX_VALUE, 2,3,1, 3,2,1, 2,3,4, 2,4,5, 4,2,5, 3,4,4, 4,3,3};
+//		int[] source = {0, 1,2,2, 2,1,2, 1,3,4, 3,1,4, 1,4,Integer.MAX_VALUE, 4,1,Integer.MAX_VALUE, 2,3,1, 3,2,1, 2,4,5, 4,2,5, 3,4,3, 4,3,3};
 //		vertex = 4;
 		
 		int[] source = {0, 1,2,3, 2,1,3, 1,4,1, 4,1,1, 1,5,2, 5,1,2, 2,3,6, 3,2,6, 4,5,4, 5,4,4, 4,6,5, 6,4,5, 5,2,0, 2,5,0, 5,6,3, 6,5,3, 6,2,5, 2,6,5, 6,3,2, 3,6,2};
@@ -265,7 +308,7 @@ public class Floyed_Warshall {
 			displayMaps();
 		}
 
-		
+		readFile();
 
 
 	}
