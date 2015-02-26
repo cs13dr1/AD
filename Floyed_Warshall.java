@@ -71,7 +71,7 @@ public class Floyed_Warshall {
 			}
 		}
 		
-		// copy mapDTmp / mapSTmp -> mapD / mapS
+		// copy mapDTmp / mapSTmp -> mapD / mapS for next iteration
 		for (int i = 1; i <= vertex; i++) {
 			for (int j = 1; j <= vertex; j++) {
 				mapD.set(i, j, mapDTmp.get(i,j));
@@ -167,35 +167,64 @@ public class Floyed_Warshall {
 
 	public static void main(String[] args) {
 		
-		vertex = 4;
+		// ToDo
+		// - remove all loops
+		// - remove all parallel edges between vertexes, keep the one with the lowest
+		
+//		int[] source = {0, 1,2,2, 2,1,2, 1,3,4, 3,1,4, 1,4,Integer.MAX_VALUE, 4,1,Integer.MAX_VALUE, 2,3,1, 3,2,1, 2,3,4, 2,4,5, 4,2,5, 3,4,4, 4,3,3};
+//		vertex = 4;
+		
+		int[] source = {0, 1,2,3, 2,1,3, 1,4,1, 4,1,1, 1,5,2, 5,1,2, 2,3,6, 3,2,6, 4,5,4, 5,4,4, 4,6,5, 6,4,5, 5,2,0, 2,5,0, 5,6,3, 6,5,3, 6,2,5, 2,6,5, 6,3,2, 3,6,2};
+		vertex = 6;
+		
+		//vertex = 0;
 		iteration = 0;
 		iterationMax = vertex - 1;
 				
 		// Fülle mapD
-		mapD.set(1, 2, 2);
-		mapD.set(2, 1, 2);
-		mapD.set(1, 3, 4);
-		mapD.set(3, 1, 4);
-		mapD.set(3, 1, 4);
-		mapD.set(1, 4, Integer.MAX_VALUE);
-		mapD.set(4, 1, Integer.MAX_VALUE);
-		mapD.set(2, 3, 1);
-		mapD.set(3, 2, 1);
-		mapD.set(2, 4, 5);
-		mapD.set(4, 2, 5);
-		mapD.set(3, 4, 3);
-		mapD.set(4, 3, 3);
+//		mapD.set(1, 2, 2);
+//		mapD.set(2, 1, 2);
+//		mapD.set(1, 3, 4);
+//		mapD.set(3, 1, 4);
+//		mapD.set(1, 4, Integer.MAX_VALUE);
+//		mapD.set(4, 1, Integer.MAX_VALUE);
+//		mapD.set(2, 3, 1);
+//		mapD.set(3, 2, 1);
+//		mapD.set(2, 4, 5);
+//		mapD.set(4, 2, 5);
+//		mapD.set(3, 4, 3);
+//		mapD.set(4, 3, 3);
+		
 
-		mapD.set(1, 1, -1);
-		mapD.set(2, 2, -1);
-		mapD.set(3, 3, -1);
-		mapD.set(4, 4, -1);
+		
+		// Fülle HashMap mit oo
+		for (int i = 1; i <= vertex; i++) {
+			for (int j = 1; j <= vertex; j++) {
+				mapD.set(i, j, Integer.MAX_VALUE);
+			}
+		}
+		
+		// Fülle Diagonalen mit -1
+		for (int i = 1; i <= vertex; i++) {
+			for (int j = 1; j <= vertex; j++) {
+				if (i == j) {
+					mapD.set(i, j, -1);
+				}
+			}
+		}
+	
+		// Fülle HashMap mit Daten
+		for (int i = 1; i <= source.length - 1;) {
+			mapD.set(source[i], source[i+1], source[i+2]);
+			i = i + 3;
+			}
+		
 	
 		
 		System.out.println("mapD0 - gefüllt mit Ausgangsdaten");
-		for (int i = 1; i <= 4; i++) {
+		for (int i = 1; i <= vertex; i++) {
 			System.out.print("[ ");
-			for (int j = 1; j <= 4; j++) {
+			for (int j = 1; j <= vertex; j++) {
 				System.out.print(mapD.get(i, j) + " ");
 			}
 			System.out.print("]");
@@ -203,8 +232,8 @@ public class Floyed_Warshall {
 		}
 
 		// fülle mapS
-		for (int i = 1; i <= 4; i++) {
-			for (int j = 1; j <= 4; j++) {
+		for (int i = 1; i <= vertex; i++) {
+			for (int j = 1; j <= vertex; j++) {
 				if (i == j) {
 					mapS.set(i, j, -1);
 				
@@ -216,9 +245,9 @@ public class Floyed_Warshall {
 		
 		System.out.println("");
 		System.out.println("mapS0 - gefüllt mit Ausgangsdaten");
-		for (int i = 1; i <= 4; i++) {
+		for (int i = 1; i <= vertex; i++) {
 			System.out.print("[ ");
-			for (int j = 1; j <= 4; j++) {
+			for (int j = 1; j <= vertex; j++) {
 				System.out.print(mapS.get(i, j) + " ");
 			}
 			System.out.print("]");
