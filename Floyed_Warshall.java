@@ -1,3 +1,4 @@
+import java.awt.DisplayMode;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -6,20 +7,170 @@ import spiffy.core.util.TwoDHashMap;
 
 
 public class Floyed_Warshall {
+	
+	public static TwoDHashMap<Integer, Integer, Integer> mapD = new TwoDHashMap<Integer, Integer, Integer>();
+	public static TwoDHashMap<Integer, Integer, Integer> mapS = new TwoDHashMap<Integer, Integer, Integer>();
+	
+	public static TwoDHashMap<Integer, Integer, Integer> mapDTmp = new TwoDHashMap<Integer, Integer, Integer>();
+	public static TwoDHashMap<Integer, Integer, Integer> mapSTmp = new TwoDHashMap<Integer, Integer, Integer>();
+	
+	public static int vertex;
+	public static int iteration;
+	public static int iterationMax;
+	public static int var1 = 0;
+	public static int var2 = 0;
+	public static int var3 = 0;
+	public static int var4 = 0;
+	public static int var5 = 0;
+	
+	
+	public static void calculateMaps() {
+		// Berechnung zum füllen von D1
+		// C(ij) aus D(k) = 0 (Feld ist frei), dann
+		// C(ij) aus D(k-1) > ( C(ik) + C(kj) ) aus D(k-1)
+		// JA: C(ij) aus D(k) = ( C(ik) + C(kj) ) aus D(k-1)
+		// NEIN: C(ij) aus D(k) = C(ij) aus D(k-1)
+				
+		// Berechnung zum füllen von S1
+		// Wenn C(ij) aus D(k-1) und C(ij) aus D(k) gleich sind, dann S(ij) von S(k-1) nach S(ij) von S(k) kopieren
+		// Wenn C(ij) aus D(k-1) und C(ij) aus D(k) ungleich sind, dann S(ij) von S(k) = k
+		
+		for (int i = 1; i <= vertex; i++) {
+			for (int j = 1; j <= vertex; j++) {
+				//System.out.println(i + " " + j);
+				if (mapDTmp.get(i, j) == 0) {
+					//System.out.println(mapDTmp.get(i, j));
+					
+					// Felder auslesen
+					var1 = mapD.get(i, j);
+					var2 = ( mapD.get(i, iteration) + mapD.get(iteration, j) );
+					
+					// Wenn einer der beiden Werte (i,k) oder (k,j) oo ist, dann wird var2 auf oo gesetzt
+					if ( (mapD.get(i, iteration) == Integer.MAX_VALUE) || (mapD.get(iteration, j) == Integer.MAX_VALUE) ) {
+						var2 = Integer.MAX_VALUE;
+					}
+
+					if (var1 > var2) {
+						mapDTmp.set(i, j, var2);
+					} else {
+						mapDTmp.set(i, j, var1);
+					}
+					
+					// fülle S(i,j)
+					var3 = mapD.get(i, j);
+					var4 = mapDTmp.get(i, j);
+					var5 = mapS.get(i, j);
+					
+					if ( var3 == var4 ) {
+						mapSTmp.set(i, j, var5);
+					} else {
+						mapSTmp.set(i, j, iteration);
+					}
+				}
+								
+			}
+		}
+		
+		// copy mapDTmp / mapSTmp -> mapD / mapS
+		for (int i = 1; i <= vertex; i++) {
+			for (int j = 1; j <= vertex; j++) {
+				mapD.set(i, j, mapDTmp.get(i,j));
+				mapS.set(i, j, mapSTmp.get(i,j));
+			}
+		}
+	}
+	
+	public static void fillMaps() {
+		// Map mapDTmp / mapSTmp, Zeile/Spalte der Iteration k aus mapD / mapS kopieren
+		// Zeile/Spalte k aus d(k-1)/s(k-1) kopieren
+				
+				// fülle mapDTmp
+				for (int i = 1; i <= vertex; i++) {
+					for (int j = 1; j <= vertex; j++) {
+						if (i == j) {
+							mapDTmp.set(i, j, -1);
+						
+						} else if ((i == iteration) || (j == iteration) ) {
+							mapDTmp.set(i, j, mapD.get(i, j));
+						} else {
+							mapDTmp.set(i, j, 0);
+						}
+					}
+				}
+				
+				System.out.println("");
+				System.out.println("Iteration: " + iteration + " / " + iterationMax);
+				System.out.println("mapDTmp - " + iteration + ". Spalte/Zeile aus D" + (iteration-1) + " kopiert");
+				for (int i = 1; i <= vertex; i++) {
+					System.out.print("[ ");
+					for (int j = 1; j <= vertex; j++) {
+						System.out.print(mapDTmp.get(i, j) + " ");
+					}
+					System.out.print("]");
+					System.out.println("");
+				}
+				
+				// fülle mapSTmp
+				for (int i = 1; i <= vertex; i++) {
+					for (int j = 1; j <= vertex; j++) {
+						if (i == j) {
+							mapSTmp.set(i, j, -1);
+						
+						} else if ((i == iteration) || (j == iteration) ) {
+							mapSTmp.set(i, j, mapS.get(i, j));
+						} else {
+							mapSTmp.set(i, j, 0);
+						}
+						
+					}
+				}
+				
+				System.out.println("");
+				System.out.println("Iteration: " + iteration + " / " + iterationMax);
+				System.out.println("mapSTmp - " + iteration + ". Spalte/Zeile aus S" + (iteration-1) + " kopiert");
+				for (int i = 1; i <= vertex; i++) {
+					System.out.print("[ ");
+					for (int j = 1; j <= vertex; j++) {
+						System.out.print(mapSTmp.get(i, j) + " ");
+					}
+					System.out.print("]");
+					System.out.println("");
+				}
+	}
+	
+	public static void displayMaps() {
+		
+		System.out.println("");
+		System.out.println("mapDTmp nach Berechnung");
+		System.out.println("Iteration: " + iteration + " / " + iterationMax);
+		for (int i = 1; i <= vertex; i++) {
+			System.out.print("[ ");
+			for (int j = 1; j <= vertex; j++) {
+				System.out.print(mapDTmp.get(i, j) + " ");
+			}
+			System.out.print("]");
+			System.out.println("");
+		}
+		
+		System.out.println("");
+		System.out.println("mapSTmp nach Berechnung");
+		System.out.println("Iteration: " + iteration + " / " + iterationMax);
+		for (int i = 1; i <= vertex; i++) {
+			System.out.print("[ ");
+			for (int j = 1; j <= vertex; j++) {
+				System.out.print(mapSTmp.get(i, j) + " ");
+			}
+			System.out.print("]");
+			System.out.println("");
+		}
+	}
 
 	public static void main(String[] args) {
 		
-		int vertex;
-		int iteration;
-		//int k;
-		
 		vertex = 4;
-		iteration = vertex - 1;
-		//k = vertex - 1;
-		
-		TwoDHashMap<Integer, Integer, Integer> mapD = new TwoDHashMap<Integer, Integer, Integer>();
-		TwoDHashMap<Integer, Integer, Integer> mapS = new TwoDHashMap<Integer, Integer, Integer>();
-		
+		iteration = 0;
+		iterationMax = vertex - 1;
+				
 		// Fülle mapD
 		mapD.set(1, 2, 2);
 		mapD.set(2, 1, 2);
@@ -35,10 +186,10 @@ public class Floyed_Warshall {
 		mapD.set(3, 4, 3);
 		mapD.set(4, 3, 3);
 
-		mapD.set(1, 1, null);
-		mapD.set(2, 2, null);
-		mapD.set(3, 3, null);
-		mapD.set(4, 4, null);
+		mapD.set(1, 1, -1);
+		mapD.set(2, 2, -1);
+		mapD.set(3, 3, -1);
+		mapD.set(4, 4, -1);
 	
 		
 		System.out.println("mapD0 - gefüllt mit Ausgangsdaten");
@@ -55,7 +206,7 @@ public class Floyed_Warshall {
 		for (int i = 1; i <= 4; i++) {
 			for (int j = 1; j <= 4; j++) {
 				if (i == j) {
-					mapS.set(i, j, null);
+					mapS.set(i, j, -1);
 				
 				} else {
 					mapS.set(i, j, j);
@@ -74,139 +225,20 @@ public class Floyed_Warshall {
 			System.out.println("");
 		}
 		
-		// neue Map anlegen, Zeile/Spalte der Iteration kopieren
-		// Zeile/Spalte 1 aus d0/s0 kopieren
-		TwoDHashMap<Integer, Integer, Integer> mapD1 = new TwoDHashMap<Integer, Integer, Integer>();
-		TwoDHashMap<Integer, Integer, Integer> mapS1 = new TwoDHashMap<Integer, Integer, Integer>();
-		
-		// fülle mapD1
-		for (int i = 1; i <= 4; i++) {
-			for (int j = 1; j <= 4; j++) {
-				if (i == j) {
-					mapD1.set(i, j, -1);
-				
-				} else if ((i == 1) || (j == 1) ) {
-					mapD1.set(i, j, mapD.get(i, j));
-				} else {
-					mapD1.set(i, j, 0);
-				}
-				
-			}
+		for (iteration = 1; iteration <= iterationMax; iteration++) {
+			// Kopiere k. Zeile/Spalte nach mapDTmp / mapSTmp
+			fillMaps();
+			
+			// Berechne Map für aktuelle Iteration
+			calculateMaps();
+			
+			// Ausgabe
+			displayMaps();
 		}
-		
-		System.out.println("");
-		System.out.println("mapD1 - Spalte 1/ Zeile1 aus D0 kopiert");
-		for (int i = 1; i <= 4; i++) {
-			System.out.print("[ ");
-			for (int j = 1; j <= 4; j++) {
-				System.out.print(mapD1.get(i, j) + " ");
-			}
-			System.out.print("]");
-			System.out.println("");
-		}
-		
-		// fülle mapS1
-		for (int i = 1; i <= 4; i++) {
-			for (int j = 1; j <= 4; j++) {
-				if (i == j) {
-					mapS1.set(i, j, -1);
-				
-				} else if ((i == 1) || (j == 1) ) {
-					mapS1.set(i, j, mapS.get(i, j));
-				} else {
-					mapS1.set(i, j, 0);
-				}
-				
-			}
-		}
-		
-		System.out.println("");
-		System.out.println("mapS1  - Spalte 1/ Zeile1 aus S0 kopiert");
-		for (int i = 1; i <= 4; i++) {
-			System.out.print("[ ");
-			for (int j = 1; j <= 4; j++) {
-				System.out.print(mapS1.get(i, j) + " ");
-			}
-			System.out.print("]");
-			System.out.println("");
-		}
-		
-		// Berechnung zum füllen von D1
-		// C(ij) aus D(k) = 0 (Feld ist frei), dann
-		// C(ij) aus D(k-1) > ( C(ik) + C(kj) ) aus D(k-1)
-		// JA: C(ij) aus D(k) = ( C(ik) + C(kj) ) aus D(k-1)
-		// NEIN: C(ij) aus D(k) = C(ij) aus D(k-1)
-		
-		// Berechnung zum füllen von S1
-		// Wenn C(ij) aus D(k-1) und C(ij) aus D(k) gleich sind, dann S(ij) von S(k-1) nach S(ij) von S(k) kopieren
-		// Wenn C(ij) aus D(k-1) und C(ij) aus D(k) ungleich sind, dann S(ij) von S(k) = k
-		
-		int var1 = 0;
-		int var2 = 0;
-		int var3 = 0;
-		int var4 = 0;
-		int var5 = 0;
-		
-		int k = 1;
-		
-		for (int i = 1; i <= 4; i++) {
-			for (int j = 1; j <= 4; j++) {
-				//System.out.println(i + " " + j);
-				if (mapD1.get(i, j) == 0) {
-					//System.out.println(mapD1.get(i, j));
-					
-					// Felder auslesen
-					var1 = mapD.get(i, j);
-					var2 = ( mapD.get(i, k) + mapD.get(k, j) );
-					
-					// Wenn einer der beiden Werte (i,k) oder (k,j) oo ist, dann wird var2 auf oo gesetzt
-					if ( (mapD.get(i, k) == Integer.MAX_VALUE) || (mapD.get(k, j) == Integer.MAX_VALUE) ) {
-						var2 = Integer.MAX_VALUE;
-					}
 
-					if (var1 > var2) {
-						mapD1.set(i, j, var2);
-					} else {
-						mapD1.set(i, j, var1);
-					}
-					
-					// fülle S(i,j)
-					var3 = mapD.get(i, j);
-					var4 = mapD1.get(i, j);
-					var5 = mapS.get(i, j);
-					
-					if ( var3 == var4 ) {
-						mapS1.set(i, j, var5);
-					} else {
-						mapS1.set(i, j, k);
-					}
-				}
-				
-				
-			}
-		}
 		
-		System.out.println("");
-		System.out.println("mapD1 nach Berechnung");
-		for (int i = 1; i <= 4; i++) {
-			System.out.print("[ ");
-			for (int j = 1; j <= 4; j++) {
-				System.out.print(mapD1.get(i, j) + " ");
-			}
-			System.out.print("]");
-			System.out.println("");
-		}
-		
-		System.out.println("");
-		System.out.println("mapS1 nach Berechnung");
-		for (int i = 1; i <= 4; i++) {
-			System.out.print("[ ");
-			for (int j = 1; j <= 4; j++) {
-				System.out.print(mapS1.get(i, j) + " ");
-			}
-			System.out.print("]");
-			System.out.println("");
-		}
+
+
 	}
 	
 }
