@@ -89,11 +89,11 @@ public class Floyed_Warshall {
 						if (var1 > var2) {
 							// YES
 							mapDTmp.set(i, j, var2);
-							mapDTmp.set(j, i, var2);
+							//mapDTmp.set(j, i, var2);
 						} else {
 							// NO
 							mapDTmp.set(i, j, var1);
-							mapDTmp.set(j, i, var1);
+							//mapDTmp.set(j, i, var1);
 						}
 						
 						// fülle S(i,j)
@@ -103,10 +103,10 @@ public class Floyed_Warshall {
 						
 						if ( var3 == var4 ) {
 							mapSTmp.set(i, j, var5);
-							mapSTmp.set(j, i, var5);
+							//mapSTmp.set(j, i, var5);
 						} else {
 							mapSTmp.set(i, j, iteration);
-							mapSTmp.set(j, i, iteration);
+							//mapSTmp.set(j, i, iteration);
 						}
 					}
 									
@@ -214,15 +214,30 @@ public class Floyed_Warshall {
 		// - remove all parallel edges between vertexes, keep the one with the lowest
 		// - calculateMap darf nicht k. Zeile/Speile durchlaufen
 		
-//		int[] source = {0, 1,2,2, 2,1,2, 1,3,4, 3,1,4, 1,4,Integer.MAX_VALUE, 4,1,Integer.MAX_VALUE, 2,3,1, 3,2,1, 2,4,5, 4,2,5, 3,4,3, 4,3,3};
+		// Beispiel Youtube
+//		int[] source = {0, 1,2,2, 2,1,2, 1,3,4, 3,1,4, 2,3,1, 3,2,1, 2,4,5, 4,2,5, 3,4,3, 4,3,3};
 //		vertex = 4;
 		
-		int[] source = {0, 1,2,3, 2,1,3, 1,4,1, 4,1,1, 1,5,2, 5,1,2, 2,3,6, 3,2,6, 4,5,4, 5,4,4, 4,6,5, 6,4,5, 5,2,0, 2,5,0, 5,6,3, 6,5,3, 6,2,5, 2,6,5, 6,3,2, 3,6,2};
-		vertex = 6;
+//		// Beispiel AD Übung 5.1.b
+//		 int[] source = {0, 1,2,3, 1,4,1, 1,5,2, 2,1,4, 2,3,6, 4,5,4, 4,6,5, 5,2,0, 5,6,3, 6,2,5, 6,3,2};
+//		 vertex = 6;
+		
+		// Bsp. aus Schöning, S. 211
+		 int [] source ={0, 1,2,6, 1,3,4, 2,3,7, 2,4,5, 3,1,1, 3,2,8, 3,4,3, 3,5,2, 4,1,1, 4,5,5, 5,5,5, 5,3,4};
+		 vertex = 5;
+		
+		// anderes Beispiel
+//		int[] source = {0, 1,2,5, 1,4,10, 2,3,3, 3,4,1};
+//		vertex = 4;
+		
+		// anderes Beispiel
+		// http://math.mit.edu/~rothvoss/18.304.1PM/Presentations/1-Chandler-18.304lecture1.pdf
+//		int[] source = {0, 1,3,6, 1,4,3, 2,1,3, 3,4,2, 4,3,1, 4,2,1, 5,2,4, 5,4,2};
+//		vertex = 5;
 		
 		//vertex = 0;
 		iteration = 0;
-		iterationMax = vertex - 1;
+		iterationMax = vertex;
 				
 		// Fülle mapD
 //		mapD.set(1, 2, 2);
